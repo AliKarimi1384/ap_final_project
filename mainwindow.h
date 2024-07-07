@@ -15,6 +15,11 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+private slots:
+    void on_play_pvp_clicked();
+
+    void on_play_survival_clicked();
+
 private:
     Ui::MainWindow *ui;
 };
