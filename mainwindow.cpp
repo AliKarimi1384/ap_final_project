@@ -1,10 +1,13 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-
+#include "first_page.h"
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
+    first_page fp;
+    fp.setModal(true);
+    fp.exec();
     ui->setupUi(this);
 }
 
