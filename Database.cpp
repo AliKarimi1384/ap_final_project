@@ -5,12 +5,40 @@
 #include <string>
 #include <curl/curl.h>
 #include <json/json.h>
+#include <ctime>
+#include <cstdlib>
 
 struct Question {
     std::string question;
     std::string options[4];
     std::string correct_answer;
 };
+
+struct GameData {
+    int index;
+    std::string id;
+    std::string time_stamp;
+    int score;
+    std::string difficulty;
+};
+
+std::string generateRandomID() {
+    const char alphanum[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+    int len = 8;
+    std::string id;
+    for (int i = 0; i < len; ++i) {
+        id += alphanum[rand() % (sizeof(alphanum) - 1)];
+    }
+    return id;
+}
+
+std::string getCurrentTimeStamp() {
+    time_t now = time(0);
+    tm *ltm = localtime(&now);
+    char timestamp[20];
+    strftime(timestamp, sizeof(timestamp), "%Y-%m-%d %H:%M:%S", ltm);
+    return std::string(timestamp);
+}
 
 static size_t WriteCallback(void* contents, size_t size, size_t nmemb, void* userp) {
     ((std::string*)userp)->append((char*)contents, size * nmemb);
@@ -48,7 +76,6 @@ std::vector<Question> fetchQuestions(int amount, const std::string& difficulty, 
     std::string errs;
 
     std::istringstream s(readBuffer);
-    std::string errs;
     if (!Json::parseFromStream(reader, s, &jsonData, &errs)) {
         std::cerr << "Error parsing JSON: " << errs << std::endl;
         return questions;
@@ -69,7 +96,7 @@ std::vector<Question> fetchQuestions(int amount, const std::string& difficulty, 
     return questions;
 }
 
-void saveQuestionsToCSV(const std::string& filename, const std::vector<Question>& questions) {
+void saveGameDataToCSV(const std::string& filename, const std::vector<GameData>& game_data) {
     std::ofstream file(filename);
 
     if (!file.is_open()) {
@@ -77,25 +104,37 @@ void saveQuestionsToCSV(const std::string& filename, const std::vector<Question>
         return;
     }
 
-    file << "question,option1,option2,option3,option4,correct_answer\n";
-    for (const auto& q : questions) {
-        file << "\"" << q.question << "\","
-             << "\"" << q.options[0] << "\","
-             << "\"" << q.options[1] << "\","
-             << "\"" << q.options[2] << "\","
-             << "\"" << q.options[3] << "\","
-             << "\"" << q.correct_answer << "\"\n";
+    file << "Index,ID,Time Stamp,Score,Difficulty\n";
+    for (const auto& data : game_data) {
+        file << data.index << ","
+             << data.id << ","
+             << data.time_stamp << ","
+             << data.score << ","
+             << data.difficulty << "\n";
     }
 
     file.close();
 }
 
 int main() {
-    std::vector<Question> questions = fetchQuestions(5, "medium", 18);
+    srand(time(0));
+    std::vector<Question> questions = fetchQuestions(5, "medium", 18); 
+    std::vector<GameData> game_data;
 
-    saveQuestionsToCSV("questions.csv", questions);
+    
+    for (int i = 0; i < 5; ++i) {
+        GameData data;
+        data.index = i + 1;
+        data.id = generateRandomID();
+        data.time_stamp = getCurrentTimeStamp();
+        data.score = rand() % 101; 
+        data.difficulty = "medium";
+        game_data.push_back(data);
+    }
 
-    std::cout << "Questions saved to questions.csv" << std::endl;
+    saveGameDataToCSV("game_data.csv", game_data);
+
+    std::cout << "Game data saved to game_data.csv" << std::endl;
 
     return 0;
 }
