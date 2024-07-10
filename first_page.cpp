@@ -1,8 +1,6 @@
 #include "first_page.h"
 #include "ui_first_page.h"
 #include <QSoundEffect>
-#include <thread>
-#include <chrono>
 #include <QTimer>
 #include <string>
 
@@ -14,7 +12,7 @@ first_page::first_page(QWidget *parent) :
     ui->label_2->hide();
     ui->label_3->hide();
     QSoundEffect *start = new QSoundEffect();
-    start->setSource(QUrl::fromLocalFile("starting.wav"));
+    start->setSource(QUrl::fromLocalFile("fx/starting.wav"));
     start->play();
     QTimer::singleShot(2000, this, &first_page::showLabel2);
     QTimer::singleShot(4000, this, &first_page::showLabel3);
