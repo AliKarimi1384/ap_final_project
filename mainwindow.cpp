@@ -2,14 +2,15 @@
 #include "ui_mainwindow.h"
 #include "first_page.h"
 #include "pvp_mode.h"
+#include "survival_mode.h"
 //#include "Json_Parse.h"
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
-    first_page fp;
-    fp.setModal(true);
-    fp.exec();
+//    first_page fp;
+//    fp.setModal(true);
+//    fp.exec();
     ui->setupUi(this);
 }
 
@@ -29,4 +30,6 @@ void MainWindow::on_play_pvp_clicked()
 void MainWindow::on_play_survival_clicked()
 {
     //this function opens the survival mode page
+    survival_mode *survival = new survival_mode(NULL);
+    survival->show();
 }

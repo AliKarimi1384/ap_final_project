@@ -20,7 +20,8 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     names.cpp \
-    pvp_mode.cpp
+    pvp_mode.cpp \
+    survival_mode.cpp
 
 HEADERS += \
     difficulty.h \
@@ -29,14 +30,17 @@ HEADERS += \
     names.h \
     pvp_mode.h \
     qst.h \
-    quiz.h
+    quiz.h \
+    quiz2.h \
+    survival_mode.h
 
 FORMS += \
     difficulty.ui \
     first_page.ui \
     mainwindow.ui \
     names.ui \
-    pvp_mode.ui
+    pvp_mode.ui \
+    survival_mode.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
